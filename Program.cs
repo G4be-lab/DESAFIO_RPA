@@ -24,20 +24,24 @@ namespace CEPFacil
     class Program
     {
         #region Declarations
-        public static string inputPath = @"C:\Users\" + Environment.UserName + @"\Documents\inputFile.xlsx";
-        public static string outputPath = @"C:\Users\" + Environment.UserName + @"\Documents\outputFile.xlsx";
-        public static string driverFile = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\"));
+        static string root = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\"));
+        public static string inputPath = root + @"\inputFile.xlsx";
+        public static string outputPath = root + @"\OutputFile.xlsx";
+        public static string driverFile = root;
         public static string url = @"https://buscacepinter.correios.com.br/app/endereco/index.php";
         public static Thread[] threads;
-        public static int threadsToUse = 8;
         public static Worker[] workers;
         public static XLWorkbook inputWb;
         public static XLWorkbook outputWb;
         public static int lineCount, linesFound;
         static int indexCount;
         public static bool once = false;
-        public static bool useHeadless = true;
         #endregion
+
+        //# - Params
+        public static int threadsToUse = 8;
+        public static bool useHeadless = true;
+        //#
 
         #region Static_Functions
         public static void Write(Data data)
@@ -53,7 +57,7 @@ namespace CEPFacil
 
         static int[] GetCEPRange()
         {        
-            var n = inputWb.Worksheet(1).Cell(lineCount + 2, 1).Value.ToString();            
+            var n = inputWb.Worksheet(1).Cell(lineCount + 2, 1).Value.ToString();
             lineCount++;
             {
                 if (lineCount == 1)
@@ -120,8 +124,7 @@ namespace CEPFacil
                 for (int i = 0; i < threadsToUse; i++)
                 {
                     if (lineCount < linesFound && !workers[i].busy)
-                    {
-                        Console.WriteLine(threads[i].ThreadState.ToString());
+                    {                        
                         var ceps = GetCEPRange();
                         workers[i].UpdateCEPs(ceps[0], ceps[1]);
                         threads[i] = new Thread(new ThreadStart(workers[i].Work));
