@@ -45,7 +45,8 @@ namespace CEPFacil
             outputWb.Worksheet(1).Cell(indexCount+2, 1).Value = data.cep;
             outputWb.Worksheet(1).Cell(indexCount+2, 2).Value = data.nome;
             outputWb.Worksheet(1).Cell(indexCount+2, 3).Value = data.bairro;
-            outputWb.Worksheet(1).Cell(indexCount+2, 4).Value = data.estado;                
+            outputWb.Worksheet(1).Cell(indexCount+2, 4).Value = data.estado;
+            outputWb.Worksheet(1).Cell(indexCount + 2, 5).Value = data.timestamp.ToString();
             indexCount++;
             outputWb.Save();
         }
@@ -93,7 +94,7 @@ namespace CEPFacil
             while (!string.IsNullOrEmpty((string)inputWb.Worksheet(1).Cell(linesFound+1, 1).Value)) // Reads first column down until blank space, ignores header
                 linesFound++;            
 
-            for (int i = 1; i <= 4; i++) 
+            for (int i = 1; i <= 5; i++) 
                 outputWb.Worksheet(1).Cell(1, i).Value = ((Fields)i).ToString("g").Replace("_"," "); //Header
 
             Console.Clear();
@@ -261,6 +262,7 @@ namespace CEPFacil
         Logradouro_Nome,
         Bairro_Distrito,
         Localidade_UF,
+        Time_Added
     }
     public class Data // class to hold information
     {        
@@ -268,6 +270,7 @@ namespace CEPFacil
         public string nome;
         public string bairro;
         public string estado;
+        public DateTime timestamp;
         
         public Data(string _cep, string _nome, string _bairro, string _estado)
         {            
@@ -275,6 +278,7 @@ namespace CEPFacil
             nome = _nome;
             bairro = _bairro;
             estado = _estado;
+            timestamp = DateTime.Now;
         }
     }
 }
