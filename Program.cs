@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 using ClosedXML.Excel;
@@ -25,7 +26,7 @@ namespace CEPFacil
         #region Declarations
         public static string inputPath = @"C:\Users\" + Environment.UserName + @"\Documents\inputFile.xlsx";
         public static string outputPath = @"C:\Users\" + Environment.UserName + @"\Documents\outputFile.xlsx";
-        public static string driverFile = @"C:\Users\" + Environment.UserName + @"\Documents";
+        public static string driverFile = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\"));
         public static string url = @"https://buscacepinter.correios.com.br/app/endereco/index.php";
         public static Thread[] threads;
         public static int threadsToUse = 8;
@@ -154,8 +155,10 @@ namespace CEPFacil
             List<Data> dataList = new List<Data>();
 
             var browserOptions = new ChromeOptions();
-            if(Program.useHeadless)
-            browserOptions.AddArgument("headless");
+            if (Program.useHeadless)
+            {
+                browserOptions.AddArgument("headless");
+            }
             browserOptions.AddArgument("--window-size=1280,720");
 
             if (browser == null)
